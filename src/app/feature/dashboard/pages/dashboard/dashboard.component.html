@@ -1,0 +1,25 @@
+<main class="main">
+
+  <div class="wallet">
+    <div class="wallet-account">
+      <h1>ETH: {{ (balance$ | async) | number:'.0-5' }}</h1>
+      <h2 *ngIf="address$ | async as address" [cdkCopyToClipboard]="address">{{ address | walletAddress: '8:8' }}</h2>
+    </div>
+  </div>
+
+  <div class="wallet-operations">
+    <app-asset-operations></app-asset-operations>
+  </div>
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>Tokens</ng-template>
+      <app-tokens-list></app-tokens-list>
+    </mat-tab>
+
+    <mat-tab disabled>
+      <ng-template mat-tab-label>History</ng-template>
+      <app-history></app-history>
+    </mat-tab>
+  </mat-tab-group>
+</main>

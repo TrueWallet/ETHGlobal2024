@@ -1,0 +1,56 @@
+.app {
+  &-header {
+    padding: 4px 16px;
+    height: var(--header-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background: rgba(24, 26, 32, 0.85);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &-footer {
+    height: var(--footer-height);
+    padding: 0 32px;
+    border-top: 1px solid var(--border-color-primary);
+    background: rgba(24, 26, 32, 0.85);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+
+    a {
+      text-decoration: none;
+      text-align: center;
+      flex: 1;
+
+      &:not(.active) {
+        color: #9E9E9E;
+      }
+
+      svg {
+        width: 24px;
+        height: 24px;
+        display: block;
+        margin: 0 auto 2px;
+      }
+    }
+  }
+}
+
+main {
+  padding: calc(var(--header-height) + 16px) 24px calc(var(--footer-height) + 16px);
+}

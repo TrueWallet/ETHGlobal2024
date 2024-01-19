@@ -1,1 +1,145 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+$tw-palette: (
+  50: #e8eaf6,
+  100: #c5cae9,
+  200: #9fa8da,
+  300: #7986cb,
+  400: #5c6bc0,
+  500: var(--app-brand-color),
+  600: #3949ab,
+  700: #303f9f,
+  800: #283593,
+  900: #1a237e,
+  A100: #8c9eff,
+  A200: #536dfe,
+  A400: #3d5afe,
+  A700: #304ffe,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$true-wallet-tg-bot-primary: mat.define-palette($tw-palette);
+$true-wallet-tg-bot-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$true-wallet-tg-bot-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$true-wallet-tg-bot-theme: mat.define-light-theme((
+  color: (
+    primary: $true-wallet-tg-bot-primary,
+    accent: $true-wallet-tg-bot-accent,
+    warn: $true-wallet-tg-bot-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($true-wallet-tg-bot-theme);
+
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --app-background: #181A20;
+  --app-brand-color: #1BAC4B;
+
+  --text-color-primary: #FFFFFF;
+  --text-color-secondary: #E0E0E0;
+
+  --color-success: #07BD74;
+  --color-info: #4353FF;
+  --color-warning: #FF981F;
+  --color-danger: #F75555;
+
+  --border-color-primary: #35383F;
+
+  --header-height: 48px;
+  --footer-height: 56px;
+
+
+  --mdc-dialog-container-color: var(--app-background);
+  --mat-divider-color: var(--border-color-primary);
+  --mdc-list-list-item-label-text-color: var(--text-color-primary);
+  --mdc-list-list-item-hover-label-text-color: var(--text-color-primary);
+  --mat-select-enabled-trigger-text-color: var(--text-color-primary);
+  --mat-select-enabled-arrow-color: var(--text-color-primary);
+
+  .app {
+
+    .mat-mdc-tab-group {
+      --mat-tab-header-inactive-label-text-color: #616161;
+    }
+
+    .mat-mdc-button {
+      --mdc-text-button-label-text-color: var(--text-color-primary);
+    }
+
+  }
+}
+
+html, body {
+  height: 100%;
+  color: var(--text-color-primary);
+}
+
+body {
+  background-color: var(--app-background);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Urbanist, sans-serif;
+}
+
+a {
+  color: var(--app-brand-color);
+}
+
+.mat-mdc {
+  &-tab-body-content {
+    padding-top: 24px;
+  }
+}
+
+.cdk-overlay-dark-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.erc20-operation {
+  .mat-bottom-sheet-container {
+    border-radius: 16px 16px 0 0;
+    min-height: 80vh;
+  }
+}

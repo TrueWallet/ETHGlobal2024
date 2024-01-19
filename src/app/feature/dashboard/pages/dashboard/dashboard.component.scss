@@ -1,0 +1,27 @@
+.wallet {
+  &-account {
+    min-height: 176px;
+    border-radius: 16px;
+    background: var(--app-brand-color) url('/assets/images/card-tpl.png') no-repeat center;
+    background-size: cover;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 24px;
+
+    h1 {
+      font-size: 42px;
+      line-height: 60px;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  &-operations {
+    margin-bottom: 16px;
+  }
+}

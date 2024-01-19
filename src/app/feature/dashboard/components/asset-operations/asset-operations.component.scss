@@ -1,0 +1,26 @@
+.operations {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &.centered {
+    justify-content: center;
+    gap: 24px;
+  }
+}
+
+.operation {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+
+  button {
+    display: block;
+    width: 56px;
+    height: 56px;
+    background: #252832;
+    border-radius: 12px;
+    border: 0;
+    margin-bottom: 8px;
+  }
+}
