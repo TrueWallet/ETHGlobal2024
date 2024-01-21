@@ -36,6 +36,8 @@
       text-decoration: none;
       text-align: center;
       flex: 1;
+      font-size: 10px;
+      line-height: 12px;
 
       &:not(.active) {
         color: #9E9E9E;

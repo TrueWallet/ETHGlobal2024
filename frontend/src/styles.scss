@@ -85,6 +85,10 @@ $true-wallet-tg-bot-theme: mat.define-light-theme((
   --header-height: 48px;
   --footer-height: 56px;
 
+  --form-control-bg: #1F222A;
+  --button-disabled-color: rgba(255, 255, 255, 0.24);
+  --button-disabled-background: #3A3D46;
+
 
   --mdc-dialog-container-color: var(--app-background);
   --mat-divider-color: var(--border-color-primary);
@@ -92,6 +96,22 @@ $true-wallet-tg-bot-theme: mat.define-light-theme((
   --mdc-list-list-item-hover-label-text-color: var(--text-color-primary);
   --mat-select-enabled-trigger-text-color: var(--text-color-primary);
   --mat-select-enabled-arrow-color: var(--text-color-primary);
+
+  --mat-bottom-sheet-container-background-color: var(--app-background);
+  --mat-bottom-sheet-container-text-color: var(--text-color-primary);
+
+
+  --mdc-outlined-text-field-label-text-color: var(--text-color-primary);
+  --mdc-outlined-text-field-outlined-label-text-color: var(--text-color-primary);
+  --mdc-outlined-text-field-outline-width: 0;
+  --mdc-outlined-text-field-input-text-color: var(--text-color-primary);
+  --mdc-outlined-text-field-hover-outline-color: transparent;
+  --mdc-outlined-text-field-focus-outline-color: transparent;
+  --mdc-filled-button-disabled-label-text-color: var(--button-disabled-color);
+  --mdc-filled-button-disabled-container-color: var(--button-disabled-background);
+
+  --mdc-elevated-card-container-shape: 20px;
+  --mdc-elevated-card-container-color: transparent;
 
   .app {
 
@@ -102,7 +122,6 @@ $true-wallet-tg-bot-theme: mat.define-light-theme((
     .mat-mdc-button {
       --mdc-text-button-label-text-color: var(--text-color-primary);
     }
-
   }
 }
 
@@ -126,20 +145,73 @@ a {
   color: var(--app-brand-color);
 }
 
-.mat-mdc {
-  &-tab-body-content {
-    padding-top: 24px;
+.app {
+  .mat-mdc {
+    &-tab-body-content {
+      padding-top: 24px;
+    }
+
+    &-form-field {
+      width: 100%;
+      color: var(--text-color-primary);
+
+      &:not(:first-of-type) {
+        margin-top: 24px;
+      }
+
+      &-text-suffix {
+        color: var(--app-brand-color);
+      }
+
+      &-hint {
+        color: var(--text-color-secondary);
+        font-size: smaller;
+      }
+    }
+
+    &-button-base {
+      border-radius: 16px;
+
+      &.full-width {
+        width: 100%;
+      }
+
+      &.size-l {
+        height: 56px;
+        line-height: 56px;
+      }
+    }
+
+    &-card {
+      padding: 16px 24px;
+      border: 1px solid var(--border-color-primary);
+
+      &-title {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      &-content {
+        padding: 16px 0 0;
+        color: var(--text-color-secondary);
+      }
+    }
   }
-}
 
-.cdk-overlay-dark-backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-}
+  .mdc-text-field {
+    background-color: var(--form-control-bg);
+    border-radius: 16px;
+  }
 
-.erc20-operation {
-  .mat-bottom-sheet-container {
-    border-radius: 16px 16px 0 0;
-    min-height: 80vh;
+  .cdk-overlay-dark-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+  }
+
+  .erc20-operation {
+    .mat-bottom-sheet-container {
+      border-radius: 16px 16px 0 0;
+      min-height: 80vh;
+    }
   }
 }

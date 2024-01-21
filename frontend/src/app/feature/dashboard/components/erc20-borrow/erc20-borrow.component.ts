@@ -1,32 +1,76 @@
-import { Component, Inject, Injector } from '@angular/core';
-import { MAT_BOTTOM_SHEET_DATA, MatBottomSheet, MatBottomSheetModule } from "@angular/material/bottom-sheet";
-import { ERC20Token } from "../../interfaces/erc20-token";
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from "@angular/material/bottom-sheet";
+import { ERC20Token } from "../../interfaces";
 import { MatButtonModule } from "@angular/material/button";
-import { Erc20ManagerService } from "../../services/erc20-manager/erc20-manager.service";
+import { OperationHeaderComponent } from "../operation-header/operation-header.component";
+import { BorrowService } from "../../services/borrow/borrow.service";
+import { BehaviorSubject, finalize, from, map, Observable, of, switchMap } from "rxjs";
+import { AsyncPipe, DecimalPipe, JsonPipe, NgIf } from "@angular/common";
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
+import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
+import { WalletService } from "../../../../core/services/wallet/wallet.service";
+import { FormsModule } from "@angular/forms";
+import { LoadingButtonComponent } from "../../../../core/components/loading-button/loading-button.component";
 
 @Component({
   selector: 'app-erc20-borrow',
   standalone: true,
   imports: [
     MatButtonModule,
+    OperationHeaderComponent,
+    AsyncPipe,
+    JsonPipe,
+    DecimalPipe,
+    NgIf,
+    MatCard,
+    MatCardTitle,
+    MatCardContent,
+    MatCardHeader,
+    MatFormField,
+    MatInput,
+    MatSuffix,
+    MatLabel,
+    MatHint,
+    FormsModule,
+    LoadingButtonComponent
   ],
   templateUrl: './erc20-borrow.component.html',
   styleUrl: './erc20-borrow.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Erc20BorrowComponent {
   token: ERC20Token;
-  data: any = {
-    amount: '0.1',
-  };
+
+  refresh$: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
+  loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  canBorrow$: Observable<boolean>;
+
+  borrowAmount: number = 1;
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) data: ERC20Token,
-    private erc20Manager: Erc20ManagerService,
+    private ref: MatBottomSheetRef<Erc20BorrowComponent>,
+    private borrowService: BorrowService,
   ) {
     this.token = data;
+    this.canBorrow$ = this.refresh$.pipe(
+      switchMap(() => from(this.borrowService.getDepositedAmount(this.token))),
+      map(amount => Number(amount) > 0),
+    );
   }
 
   borrow(): void {
-    this.erc20Manager.borrowERC20(this.token, this.data);
+    this.loading$.next(true);
+    this.borrowService.borrowERC20(this.token, this.borrowAmount).pipe(
+      finalize(() => this.loading$.next(false)),
+    ).subscribe((res) => {
+      console.log(res);
+      this.refresh$.next();
+    });
+  }
+
+  close(): void {
+    this.ref.dismiss();
   }
 }

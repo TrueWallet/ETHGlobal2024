@@ -1,0 +1,12 @@
+<h3>To use GHO paymaster you need to delegate borrow.</h3>
+
+<mat-form-field appearance="outline" floatLabel="always">
+  <mat-label>Borrow amount</mat-label>
+  <input type="number" matInput [(ngModel)]="amount">
+  <div matTextSuffix>GHO</div>
+  <mat-hint>1 GHO per transaction</mat-hint>
+</mat-form-field>
+
+<app-loading-button [loading]="loading$ | async" (onClick)="borrow()">
+  Borrow
+</app-loading-button>

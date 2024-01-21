@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Erc20ReceiveComponent } from './erc20-receive.component';
+import { AssetReceiveComponent } from './asset-receive.component';
 
-describe('Erc20ReceiveComponent', () => {
-  let component: Erc20ReceiveComponent;
-  let fixture: ComponentFixture<Erc20ReceiveComponent>;
+describe('AssetReceiveComponent', () => {
+  let component: AssetReceiveComponent;
+  let fixture: ComponentFixture<AssetReceiveComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Erc20ReceiveComponent]
+      imports: [AssetReceiveComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(Erc20ReceiveComponent);
+
+    fixture = TestBed.createComponent(AssetReceiveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

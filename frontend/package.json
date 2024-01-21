@@ -23,8 +23,9 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@bgd-labs/aave-address-book": "^2.17.0",
+    "angularx-qrcode": "^17.0.0",
     "rxjs": "~7.8.0",
-    "true-wallet-sdk": "github:TrueWallet/js-sdk#adb3eed",
+    "true-wallet-sdk": "github:TrueWallet/js-sdk#7c4ad3d",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },

@@ -1,17 +1,17 @@
-export enum ERC20Operation {
+export enum AssetOperation {
   send = 'Send',
   receive = 'Receive',
   borrow = 'Borrow',
+  deposit = 'Deposit',
   buy = 'Buy',
-  p2p = 'P2P',
 }
 
 export interface ERC20Token {
   title: string;
   address: string;
-  ticker: string;
+  symbol: string;
   icon: string;
-  operations: ERC20Operation[];
+  operations: AssetOperation[];
 }
 
 export interface ERC20TokenWithBalance extends ERC20Token {

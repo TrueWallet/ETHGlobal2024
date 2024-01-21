@@ -114,9 +114,9 @@ export class GHOToken extends ERCToken {
     console.log('debtToken', reserveData.variableDebtTokenAddress);
 
 
-    const opHash = '0x6b90954343a8db614cce3fb0065542e93336f01c4c5a424bab733b1b9df2d234';
+    /*const opHash = '0x6b90954343a8db614cce3fb0065542e93336f01c4c5a424bab733b1b9df2d234';
     console.log('receipt', await this.sdk.bundlerClient.getUserOperationReceipt(opHash));
-    console.log('operation', await this.sdk.bundlerClient.getUserOperationByHash(opHash));
+    console.log('operation', await this.sdk.bundlerClient.getUserOperationByHash(opHash));*/
 
 
     // Approve delegation

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Erc20SendComponent } from './erc20-send.component';
+import { LoadingButtonComponent } from './loading-button.component';
 
-describe('Erc20SendComponent', () => {
-  let component: Erc20SendComponent;
-  let fixture: ComponentFixture<Erc20SendComponent>;
+describe('LoadingButtonComponent', () => {
+  let component: LoadingButtonComponent;
+  let fixture: ComponentFixture<LoadingButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Erc20SendComponent]
+      imports: [LoadingButtonComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(Erc20SendComponent);
+    fixture = TestBed.createComponent(LoadingButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

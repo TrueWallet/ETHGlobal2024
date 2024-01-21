@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { ERC20TokenWithBalance } from "../../interfaces/erc20-token";
+import { ERC20TokenWithBalance } from "../../interfaces";
 import { MAT_DIALOG_DATA, MatDialogClose } from "@angular/material/dialog";
 import { AssetOperationsComponent } from "../asset-operations/asset-operations.component";
 import { AsyncPipe, DecimalPipe } from "@angular/common";
@@ -18,6 +18,7 @@ import { AsyncPipe, DecimalPipe } from "@angular/common";
 })
 export class AssetDetailsComponent {
 
+  // TODO: refresh balance after send/borrow
   constructor(@Inject(MAT_DIALOG_DATA) public token: ERC20TokenWithBalance) {
   }
 }

@@ -1,0 +1,9 @@
+<button mat-flat-button [disabled]="disabled || loading" class="full-width size-l" color="primary" (click)="onClick.emit()">
+  <span class="loading" *ngIf="loading else content">
+    Processing <mat-spinner [diameter]="22"></mat-spinner>
+  </span>
+
+  <ng-template #content>
+    <ng-content></ng-content>
+  </ng-template>
+</button>

@@ -1,6 +1,27 @@
-<h1>Borrow {{token.title}}</h1>
+<app-operation-header (onClose)="close()">Borrow {{token.symbol}}</app-operation-header>
 
-<div class="actions">
-  <button mat-stroked-button color="primary">Cancel</button>
-  <button mat-flat-button color="primary" (click)="borrow()">Borrow</button>
+<div class="body">
+  <mat-card>
+    <mat-card-title>Borrow</mat-card-title>
+
+    <mat-card-content *ngIf="!(canBorrow$ | async)" class="warn-message">
+      To borrow {{token.symbol}} you need to deposit first. <br>
+    </mat-card-content>
+
+    <mat-card-content>
+      <form>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Amount</mat-label>
+          <input matInput type="number" name="amount" [(ngModel)]="borrowAmount">
+          <div matTextSuffix>{{token.symbol}}</div>
+        </mat-form-field>
+
+        <div class="actions">
+          <app-loading-button [loading]="loading$ | async" (onClick)="borrow()">
+            Borrow
+          </app-loading-button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>

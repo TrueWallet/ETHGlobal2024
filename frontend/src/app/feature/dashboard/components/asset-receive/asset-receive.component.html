@@ -1,0 +1,21 @@
+<app-operation-header (onClose)="close()">
+  Receive {{token?.symbol || 'ETH'}}
+</app-operation-header>
+
+<div class="body" *ngIf="walletAddress | async as walletAddress">
+  <div class="wallet-address">
+    {{walletAddress | walletAddress: '10:10'}}
+
+    <button mat-icon-button color="primary" [cdkCopyToClipboard]="walletAddress">
+      <mat-icon>content_copy</mat-icon>
+    </button>
+  </div>
+
+  <qrcode
+    [width]="300"
+    [qrdata]="'ethereum:' + walletAddress"
+    [colorDark]="'#1BAC4B'"
+    [colorLight]="'#252832'"
+    [margin]="2"
+  ></qrcode>
+</div>

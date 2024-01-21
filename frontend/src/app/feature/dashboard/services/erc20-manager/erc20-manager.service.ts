@@ -1,54 +1,64 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, of, tap } from "rxjs";
-import { ERC20Token, ERC20TokenWithBalance } from "../../interfaces/erc20-token";
-import { ERC20TokensList } from "../../constants/erc20-tokens-list";
+import { catchError, filter, from, map, Observable, of, repeat, switchMap, takeWhile, tap, throwError } from "rxjs";
+import { ERC20TokenWithBalance, SendData } from "../../interfaces";
 import { WalletService } from "../../../../core/services/wallet/wallet.service";
-import { GHOToken } from "../../../../core/classes/GHOToken";
-import { InterestRate } from "@aave/contract-helpers";
+import { NotificationsService } from "../notifications/notifications.service";
+import { Addresses, ERC20TokensList, Paymasters } from "../../../../core/configs";
+import { BorrowService } from "../borrow/borrow.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class Erc20ManagerService {
   constructor(
-    private walletService: WalletService,
+    private wallet: WalletService,
+    private notifications: NotificationsService,
+    private borrowService: BorrowService,
   ) { }
 
   getTokensList(): Observable<ERC20TokenWithBalance[]> {
     return of(ERC20TokensList).pipe(
       map(tokens => tokens.map(token => ({
         ...token,
-        balance: this.walletService.sdk.getERC20Balance(token.address),
+        balance: this.wallet.sdk.getERC20Balance(token.address),
       }))),
     );
   }
 
-  sendERC20(item: ERC20Token): Observable<any> {
-    console.log('Send ERC20', item);
-    return of(true);
+  sendAsset(token: ERC20TokenWithBalance | null, data: SendData): Observable<any> {
+    return from(this.getSendOperation(token, data)).pipe(
+      tap((opHash) => {console.log('opHash', opHash)}),
+      switchMap((opHash) => this.waitForReceipt(opHash)),
+      tap(() => this.notifications.success('Transaction has been sent')),
+    );
   }
 
-  receiveERC20(item: ERC20Token): Observable<any> {
-    console.log('Receive ERC20', item);
-    return of(true);
+  private waitForReceipt(opHash: string): Observable<any> {
+    return of(opHash).pipe(
+      tap((opHash) => {console.log('here opHash', opHash)}),
+      switchMap((opHash: string) => from(this.wallet.sdk.bundlerClient.getUserOperationReceipt(opHash))),
+      tap((receipt) => {console.log('receipt', receipt)}),
+      repeat({delay: 10_000}),
+      filter((receipt) => receipt !== null),
+      takeWhile((receipt) => receipt === null, true),
+    );
   }
 
-  async borrowERC20(item: ERC20Token, data: any): Promise<any> {
-    // FIXME: make dynamic
-    const params = Object.assign({
-      user: this.walletService.sdk.walletAddress,
-      // user: '0xF8185B9556648f56dee28C217caaA768745eD0E7',
-      // onBehalfOf: this.walletService.sdk.walletAddress,
-      reserve: '0xc4bF5CbDaBE595361438F8c6a187bDc330539c60',
-      interestRateMode: InterestRate.Variable,
-    }, data);
+  private async getSendOperation(token: ERC20TokenWithBalance | null, data: SendData): Promise<any> {
+    if (data.paymaster === Paymasters.GHO) {
+      await this.checkGHOAllowance(Paymasters.GHO);
+    }
 
-    const gho = new GHOToken(this.walletService.sdk);
+    return token ?
+      this.wallet.sdk.sendErc20(token.address, data.amount.toString(), token.address, data.paymaster) :
+      this.wallet.sdk.send(data.address, data.amount.toString(), data.paymaster);
+  }
 
-    // @ts-ignore // fixme call private
-    const res = await gho.borrow(params, this.walletService.sdk.config.rpcProviderUrl);
-    console.log('Borrow result', res);
+  private async checkGHOAllowance(toAddress: string): Promise<void> {
+    const borrowAllowance = await this.borrowService.getBorrowAllowance(toAddress, Addresses.GHO);
 
-    return res;
+    if (borrowAllowance === '0') {
+      await this.borrowService.setBorrowAllowance(toAddress);
+    }
   }
 }

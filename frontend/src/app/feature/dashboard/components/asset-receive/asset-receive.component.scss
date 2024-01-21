@@ -1,0 +1,16 @@
+.wallet-address {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background-color: var(--form-control-bg);
+  border-radius: 16px;
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+}
+
+qrcode {
+  text-align: center;
+}

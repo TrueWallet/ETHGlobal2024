@@ -4,6 +4,9 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatSelectModule } from "@angular/material/select";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { MatButton } from "@angular/material/button";
+import { WalletService } from "./core/services/wallet/wallet.service";
+import { Observable } from "rxjs";
+import { Chain } from "./core/configs";
 
 @Component({
   selector: 'app-root',
@@ -12,4 +15,12 @@ import { MatButton } from "@angular/material/button";
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {}
+export class AppComponent {
+  chains: Chain[];
+  currentChain$: Observable<Chain>;
+
+  constructor(private wallet: WalletService) {
+    this.chains = this.wallet.getChains();
+    this.currentChain$ = this.wallet.currentChain$.asObservable();
+  }
+}

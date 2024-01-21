@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AssetP2PComponent } from './asset-p2-p.component';
+import { AssetDepositComponent } from './asset-deposit.component';
 
 describe('AssetP2PComponent', () => {
-  let component: AssetP2PComponent;
-  let fixture: ComponentFixture<AssetP2PComponent>;
+  let component: AssetDepositComponent;
+  let fixture: ComponentFixture<AssetDepositComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AssetP2PComponent]
+      imports: [AssetDepositComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(AssetP2PComponent);
+
+    fixture = TestBed.createComponent(AssetDepositComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

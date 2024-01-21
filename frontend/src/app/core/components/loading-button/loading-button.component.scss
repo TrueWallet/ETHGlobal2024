@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  --mdc-circular-progress-active-indicator-color: var(--button-disabled-color);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

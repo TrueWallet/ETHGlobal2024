@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Erc20ManagerService } from "../../services/erc20-manager/erc20-manager.service";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { ERC20TokenWithBalance } from "../../interfaces/erc20-token";
 import { MatListModule } from "@angular/material/list";
 import { AsyncPipe, DecimalPipe, NgForOf, NgIf } from "@angular/common";
