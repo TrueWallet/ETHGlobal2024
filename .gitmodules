@@ -1,0 +1,24 @@
+[submodule "contracts/lib/forge-std"]
+	path = contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "contracts/lib/account-abstraction"]
+	path = contracts/lib/account-abstraction
+	url = https://github.com/eth-infinitism/account-abstraction
+[submodule "contracts/lib/solmate"]
+	path = contracts/lib/solmate
+	url = https://github.com/transmissions11/solmate
+[submodule "contracts/lib/openzeppelin-contracts"]
+	path = contracts/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "contracts/lib/contracts"]
+	path = contracts/lib/contracts
+	url = https://github.com/TrueWallet/contracts
+[submodule "contracts/lib/gho-core"]
+	path = contracts/lib/gho-core
+	url = https://github.com/aave/gho-core
+[submodule "contracts/lib/aave-v3-core"]
+	path = contracts/lib/aave-v3-core
+	url = https://github.com/aave/aave-v3-core
+[submodule "contracts/lib/aave-v3-periphery"]
+	path = contracts/lib/aave-v3-periphery
+	url = https://github.com/aave/aave-v3-periphery
