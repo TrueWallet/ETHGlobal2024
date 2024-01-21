@@ -1,0 +1,18 @@
+.actions {
+  margin-top: 24px;
+}
+
+.deposits {
+  margin-bottom: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  .value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}

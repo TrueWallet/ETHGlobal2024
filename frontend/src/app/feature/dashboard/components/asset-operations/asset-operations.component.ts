@@ -1,12 +1,13 @@
-import { Component, Input } from '@angular/core';
-import { AssetOperation, ERC20Token } from "../../interfaces/erc20-token";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AssetOperation, ERC20Token } from "../../interfaces";
 import { NgClass, NgForOf, NgSwitch, NgSwitchCase } from "@angular/common";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { AssetSendComponent } from "../asset-send/asset-send.component";
 import { AssetReceiveComponent } from "../asset-receive/asset-receive.component";
 import { Erc20BorrowComponent } from "../erc20-borrow/erc20-borrow.component";
 import { AssetBuyComponent } from "../asset-buy/asset-buy.component";
-import { AssetDepositComponent } from "../asset-p2-p/asset-deposit.component";
+import { AssetDepositComponent } from "../asset-deposit/asset-deposit.component";
+import { map } from "rxjs";
 
 @Component({
   selector: 'app-asset-operations',
@@ -29,6 +30,8 @@ export class AssetOperationsComponent {
     }
   };
 
+  @Output() processed: EventEmitter<void> = new EventEmitter<void>();
+
   token!: ERC20Token;
 
   operations: AssetOperation[] = [
@@ -38,12 +41,12 @@ export class AssetOperationsComponent {
     AssetOperation.buy,
   ];
 
+  protected readonly ERC20Operation = AssetOperation;
+
   constructor(private bottomSheet: MatBottomSheet) {
-    // FIXME: remove this
-    this.handleOperation(AssetOperation.send);
   }
 
-  handleOperation(operation: AssetOperation): any {
+  handleOperation(operation: AssetOperation): void {
     const bsConfig = {
       data: this.token,
       panelClass: 'erc20-operation',
@@ -55,19 +58,28 @@ export class AssetOperationsComponent {
 
     switch (operation) {
       case AssetOperation.send:
-        return this.bottomSheet.open(AssetSendComponent, bsConfig);
+        this.bottomSheet.open(AssetSendComponent, bsConfig).afterDismissed().pipe(
+          map(() => this.processed.emit()),
+        ).subscribe();
+        break;
       case AssetOperation.receive:
-        return this.bottomSheet.open(AssetReceiveComponent, bsConfig);
+        this.bottomSheet.open(AssetReceiveComponent, bsConfig);
+        break;
       case AssetOperation.borrow:
-        return this.bottomSheet.open(Erc20BorrowComponent, bsConfig);
+        this.bottomSheet.open(Erc20BorrowComponent, bsConfig).afterDismissed().pipe(
+          map(() => this.processed.emit()),
+        ).subscribe();
+        break;
       case AssetOperation.buy:
-        return this.bottomSheet.open(AssetBuyComponent, bsConfig);
+        this.bottomSheet.open(AssetBuyComponent, bsConfig);
+        break;
       case AssetOperation.deposit:
-        return this.bottomSheet.open(AssetDepositComponent, bsConfig);
+        this.bottomSheet.open(AssetDepositComponent, bsConfig).afterDismissed().pipe(
+          map(() => this.processed.emit()),
+        ).subscribe();
+        break;
       default:
         throw new Error(`Operation ${operation} not supported`);
     }
   }
-
-  protected readonly ERC20Operation = AssetOperation;
 }

@@ -6,20 +6,17 @@ import { AaveV3Sepolia } from "@bgd-labs/aave-address-book";
 import { BigNumber, ethers, providers } from "ethers";
 import { encodeFunctionData } from "true-wallet-sdk";
 import {
-  filter,
   from,
   lastValueFrom,
   map,
   Observable,
-  of,
-  repeat,
   switchMap,
-  takeWhile,
   tap,
 } from "rxjs";
 import { NotificationsService } from "../notifications/notifications.service";
 import { MatDialog } from "@angular/material/dialog";
 import { BorrowToPaymasterComponent } from "../../components/borrow-to-paymaster/borrow-to-paymaster.component";
+import { waitForUserOperation } from "../../../../core/helpers/wait-for-user-operation";
 
 @Injectable({
   providedIn: 'root'
@@ -35,42 +32,10 @@ export class BorrowService {
   ) {
     // @ts-ignore fixme
     this.provider = new providers.JsonRpcProvider(this.wallet.sdk.config.rpcProviderUrl);
-    console.log('pool address', AaveV3Sepolia.POOL);
-    console.log('weth gateway', AaveV3Sepolia.WETH_GATEWAY);
     this.pool = new Pool(this.provider, {
       POOL: AaveV3Sepolia.POOL,
       WETH_GATEWAY: AaveV3Sepolia.WETH_GATEWAY,
     });
-
-    console.log('pool', this.pool);
-    // const factory = this.pool.getUserAccountData('');
-  }
-
-  async getDepositedAmount(token: ERC20Token): Promise<string> {
-    // TODO: check if we can borrow
-    const contract = this.pool.getContractInstance(AaveV3Sepolia.POOL);
-    const data = await contract.getUserAccountData(this.wallet.sdk.walletAddress);
-    console.log('getUserAccountData', data.availableBorrowsBase.toString(), data);
-
-    const getUserConfiguration = await contract.getUserConfiguration(this.wallet.sdk.walletAddress);
-    console.log('getUserConfiguration', getUserConfiguration.toString(), getUserConfiguration);
-
-
-    console.log(token);
-    const reserveData = await this.pool.getReserveData(token.address);
-    console.log(reserveData);
-
-    const debtContract = new ethers.Contract(
-      reserveData.variableDebtTokenAddress,
-      [
-        'function borrowAllowance(address fromUser, address toUser) view returns (uint256)',
-      ],
-      this.provider
-    );
-
-    const borrowAllowance: BigNumber = await debtContract['borrowAllowance'](this.wallet.sdk.walletAddress, this.wallet.sdk.walletAddress);
-    console.log('borrowAllowance', borrowAllowance);
-    return borrowAllowance.toString();
   }
 
   async getBorrowAllowance(toAddress: string, borrowTokenAddress: string): Promise<string> {
@@ -82,11 +47,10 @@ export class BorrowService {
     );
 
     const borrowAllowance: BigNumber = await debtContract['borrowAllowance'](this.wallet.sdk.walletAddress, toAddress);
-    console.log('borrowAllowance', borrowAllowance);
     return borrowAllowance.toString();
   }
 
-  borrowERC20(token: ERC20Token, amount: number): Observable<any> {
+  borrowERC20(token: ERC20Token, amount: string): Observable<any> {
     const txBorrowParams = [
       token.address, // reserve address
       ethers.utils.parseEther(amount.toString()).toBigInt(),
@@ -99,13 +63,11 @@ export class BorrowService {
     const borrowTxData = encodeFunctionData(abi, 'borrow', txBorrowParams);
 
     return from(this.wallet.sdk.execute(borrowTxData, AaveV3Sepolia.POOL)).pipe(
-      tap((opHash) => {console.log('opHash', opHash)}),
-      switchMap((opHash: string) => from(this.wallet.sdk.bundlerClient.getUserOperationReceipt(opHash))),
-      tap((receipt) => {console.log('receipt', receipt)}),
-      repeat({delay: 10_000}),
-      filter((receipt) => receipt !== null),
-      takeWhile((receipt) => receipt === null, true),
-      tap(() => this.notifications.success('Transaction has been sent')),
+      switchMap((opHash: string) => waitForUserOperation(opHash, this.wallet.sdk)),
+      tap(() => this.notifications.success({
+        title: 'Operation successful',
+        message: `You have successfully borrowed ${amount} ${token.symbol}.`
+      })),
     );
   }
 
@@ -119,7 +81,7 @@ export class BorrowService {
     return from(this.pool.getReserveData(borrowToken)).pipe(
       map((reserveData) => reserveData.variableDebtTokenAddress),
       switchMap((variableDebtTokenAddress) => this.wallet.sdk.execute(delegateData, variableDebtTokenAddress)),
-      switchMap((opHash: string) => this.waitForReceipt(opHash)),
+      switchMap((opHash: string) => waitForUserOperation(opHash, this.wallet.sdk)),
     );
   }
 
@@ -128,20 +90,5 @@ export class BorrowService {
       data: toAddress,
       disableClose: true,
     }).afterClosed());
-  }
-
-
-  // FIXME duplicate
-  private waitForReceipt(opHash: string): Observable<any> {
-    console.log('waitForReceipt', opHash);
-    return of(opHash).pipe(
-      tap((opHash) => {console.log('Waiting operation with opHash', opHash)}),
-      // switchMap((opHash: string) => from(this.wallet.sdk.bundlerClient.getUserOperationReceipt(opHash))),
-      switchMap((opHash: string) => this.wallet.sdk.bundlerClient.getUserOperationReceipt(opHash)),
-      tap((receipt) => {console.log('receipt', receipt)}),
-      repeat({delay: 10_000}),
-      filter((receipt) => receipt !== null),
-      takeWhile((receipt) => receipt === null, true),
-    );
   }
 }

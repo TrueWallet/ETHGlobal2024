@@ -8,6 +8,7 @@ import { CdkCopyToClipboard } from "@angular/cdk/clipboard";
 import { WalletAddressPipe } from "../../../../core/pipes/wallet-address.pipe";
 import { AssetOperationsComponent } from "../../components/asset-operations/asset-operations.component";
 import { animate, state, style, transition, trigger } from "@angular/animations";
+import { BehaviorSubject, Observable, switchMap } from "rxjs";
 
 @Component({
   selector: 'app-dashboard',
@@ -34,17 +35,25 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   ]
 })
 export class DashboardComponent {
+  refresh$: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
   address$: Promise<string>
-  balance$: Promise<string>;
+  balance$: Observable<string>;
+
   animationState: 'normal' | 'scaled' = 'normal';
 
   constructor(private appService: WalletService) {
     this.address$ = this.appService.getWalletAddress();
-    this.balance$ = this.appService.getBalance();
+    this.balance$ = this.refresh$.pipe(
+      switchMap(() => this.appService.getBalance())
+    );
   }
 
   triggerAnimation(): void {
     this.animationState = 'scaled';
     setTimeout(() => this.animationState = 'normal', 200);
+  }
+
+  refreshData(): void {
+    this.refresh$.next();
   }
 }

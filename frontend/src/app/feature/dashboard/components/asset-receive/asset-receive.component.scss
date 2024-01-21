@@ -1,5 +1,5 @@
 .wallet-address {
-  padding: 8px 16px;
+  padding: 4px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9,8 +9,15 @@
   font-size: 18px;
   letter-spacing: 1px;
   margin-bottom: 24px;
+  margin-top: -8px;
 }
 
 qrcode {
   text-align: center;
+
+  ::ng-deep {
+    canvas {
+      border-radius: 16px;
+    }
+  }
 }

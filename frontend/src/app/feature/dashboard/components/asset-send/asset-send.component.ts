@@ -4,7 +4,6 @@ import { ERC20Token, ERC20TokenWithBalance } from "../../interfaces";
 import { AsyncPipe, DecimalPipe, JsonPipe, NgForOf, NgIf } from "@angular/common";
 import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
-import { MatButton, MatIconButton } from "@angular/material/button";
 import { WalletService } from "../../../../core/services/wallet/wallet.service";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Erc20ManagerService } from "../../services/erc20-manager/erc20-manager.service";
@@ -70,11 +69,10 @@ export class AssetSendComponent {
     this.token = token || null;
     this.balance$ = token?.balance || this.wallet.getBalance();
 
-    // FIXME hardcoded values
     this.form = new FormGroup({
-      address: new FormControl('0x4b807A18ff07c8D9e97979EF73e5C575E9D684B3', [Validators.required]),
-      amount: new FormControl(0.01, [Validators.required]),
-      paymaster: new FormControl(Paymasters.GHO), // FIXME: change to empty
+      address: new FormControl('', [Validators.required]),
+      amount: new FormControl('', [Validators.required]),
+      paymaster: new FormControl(Paymasters.EMPTY),
     });
   }
 
@@ -82,7 +80,7 @@ export class AssetSendComponent {
     this.loading$.next(true);
     this.service.sendAsset(this.token, this.form.value).pipe(
       finalize(() => this.loading$.next(false)),
-    ).subscribe(console.log);
+    ).subscribe();
   }
 
   close(): void {

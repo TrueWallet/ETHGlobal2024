@@ -6,12 +6,12 @@ import { OperationHeaderComponent } from "../operation-header/operation-header.c
 import { BorrowService } from "../../services/borrow/borrow.service";
 import { BehaviorSubject, finalize, from, map, Observable, of, switchMap } from "rxjs";
 import { AsyncPipe, DecimalPipe, JsonPipe, NgIf } from "@angular/common";
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from "@angular/material/card";
 import { MatFormField, MatHint, MatLabel, MatSuffix } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
-import { WalletService } from "../../../../core/services/wallet/wallet.service";
 import { FormsModule } from "@angular/forms";
 import { LoadingButtonComponent } from "../../../../core/components/loading-button/loading-button.component";
+import { NotificationComponent } from "../../../../core/components/notification/notification.component";
+import { DepositService } from "../../services/deposit/deposit.service";
 
 @Component({
   selector: 'app-erc20-borrow',
@@ -23,17 +23,14 @@ import { LoadingButtonComponent } from "../../../../core/components/loading-butt
     JsonPipe,
     DecimalPipe,
     NgIf,
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
-    MatCardHeader,
     MatFormField,
     MatInput,
     MatSuffix,
     MatLabel,
     MatHint,
     FormsModule,
-    LoadingButtonComponent
+    LoadingButtonComponent,
+    NotificationComponent
   ],
   templateUrl: './erc20-borrow.component.html',
   styleUrl: './erc20-borrow.component.scss',
@@ -46,16 +43,17 @@ export class Erc20BorrowComponent {
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   canBorrow$: Observable<boolean>;
 
-  borrowAmount: number = 1;
+  borrowAmount: string = '';
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA) data: ERC20Token,
     private ref: MatBottomSheetRef<Erc20BorrowComponent>,
     private borrowService: BorrowService,
+    private deposit: DepositService,
   ) {
     this.token = data;
     this.canBorrow$ = this.refresh$.pipe(
-      switchMap(() => from(this.borrowService.getDepositedAmount(this.token))),
+      switchMap(() => from(this.deposit.getDepositedAmount())),
       map(amount => Number(amount) > 0),
     );
   }
@@ -65,7 +63,6 @@ export class Erc20BorrowComponent {
     this.borrowService.borrowERC20(this.token, this.borrowAmount).pipe(
       finalize(() => this.loading$.next(false)),
     ).subscribe((res) => {
-      console.log(res);
       this.refresh$.next();
     });
   }

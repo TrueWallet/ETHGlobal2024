@@ -1,17 +1,22 @@
-<header>
-  <svg mat-dialog-close xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17" fill="none">
-    <path d="M19.3333 8.31934C19.3333 8.76231 19.0041 9.12841 18.577 9.18635L18.4583 9.19433L0.95825 9.19433C0.475002 9.19433 0.08325 8.80258 0.08325 8.31934C0.08325 7.87636 0.41243 7.51026 0.83952 7.45232L0.95825 7.44434L18.4583 7.44434C18.9415 7.44434 19.3333 7.83609 19.3333 8.31934Z" fill="white"/>
-    <path d="M8.63374 14.7281C8.97619 15.0691 8.97738 15.6231 8.63641 15.9656C8.32643 16.2769 7.84039 16.3062 7.49729 16.0527L7.39897 15.9682L0.340639 8.94023C0.0283957 8.62933 -8.58307e-06 8.14153 0.255438 7.79845L0.340588 7.70018L7.39892 0.671018C7.74134 0.330017 8.29535 0.331164 8.63636 0.67358C8.94636 0.984866 8.97359 1.47103 8.71872 1.81305L8.63379 1.91101L2.19842 8.32053L8.63374 14.7281Z" fill="white"/>
-  </svg>
+<div class="asset">
+  <app-operation-header (onClose)="close()">
+    {{token.symbol}}
+  </app-operation-header>
 
-  {{token.symbol}}
-</header>
-
-<div class="asset-details">
-  <img [src]="token.icon" alt="">
-  <h1>{{(token.balance | async) | number: '.0-6'}} {{token.symbol}}</h1>
-
-
+  <div class="asset-details">
+    <img [src]="token.icon" alt="">
+    <h1>{{(balance$ | async) | number: '.0-6'}} {{token.symbol}}</h1>
+  </div>
 </div>
 
-<app-asset-operations class="asset-operations" [asset]="token" view="centered"></app-asset-operations>
+<div class="asset-container">
+  <app-asset-operations
+    class="asset-operations"
+    [asset]="token" view="centered"
+    (processed)="refreshData()"
+  ></app-asset-operations>
+
+  <mat-tab-group>
+    <mat-tab *ngFor="let operation of token.operations" [label]="operation"></mat-tab>
+  </mat-tab-group>
+</div>

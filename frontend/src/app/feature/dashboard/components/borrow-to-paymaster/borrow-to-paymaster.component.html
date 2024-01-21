@@ -2,11 +2,11 @@
 
 <mat-form-field appearance="outline" floatLabel="always">
   <mat-label>Borrow amount</mat-label>
-  <input type="number" matInput [(ngModel)]="amount">
+  <input type="text" matInput [(ngModel)]="amount">
   <div matTextSuffix>GHO</div>
   <mat-hint>1 GHO per transaction</mat-hint>
 </mat-form-field>
 
-<app-loading-button [loading]="loading$ | async" (onClick)="borrow()">
+<app-loading-button class="action" [loading]="loading$ | async" (onClick)="borrow()">
   Borrow
 </app-loading-button>

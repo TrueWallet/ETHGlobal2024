@@ -8,7 +8,7 @@
   </div>
 
   <div class="wallet-operations">
-    <app-asset-operations></app-asset-operations>
+    <app-asset-operations (processed)="refreshData()"></app-asset-operations>
   </div>
 
   <mat-tab-group>
@@ -17,7 +17,7 @@
       <app-tokens-list></app-tokens-list>
     </mat-tab>
 
-    <mat-tab disabled>
+    <mat-tab>
       <ng-template mat-tab-label>History</ng-template>
       <app-history></app-history>
     </mat-tab>

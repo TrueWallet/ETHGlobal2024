@@ -92,10 +92,14 @@ $true-wallet-tg-bot-theme: mat.define-light-theme((
 
   --mdc-dialog-container-color: var(--app-background);
   --mat-divider-color: var(--border-color-primary);
+  --mat-tab-header-divider-height: 1px;
+  --mat-tab-header-divider-color: var(--border-color-primary);
   --mdc-list-list-item-label-text-color: var(--text-color-primary);
   --mdc-list-list-item-hover-label-text-color: var(--text-color-primary);
   --mat-select-enabled-trigger-text-color: var(--text-color-primary);
   --mat-select-enabled-arrow-color: var(--text-color-primary);
+
+  --mat-select-panel-background-color: var(--form-control-bg);
 
   --mat-bottom-sheet-container-background-color: var(--app-background);
   --mat-bottom-sheet-container-text-color: var(--text-color-primary);
@@ -103,6 +107,7 @@ $true-wallet-tg-bot-theme: mat.define-light-theme((
 
   --mdc-outlined-text-field-label-text-color: var(--text-color-primary);
   --mdc-outlined-text-field-outlined-label-text-color: var(--text-color-primary);
+  --mdc-outlined-text-field-container-shape: 16px;
   --mdc-outlined-text-field-outline-width: 0;
   --mdc-outlined-text-field-input-text-color: var(--text-color-primary);
   --mdc-outlined-text-field-hover-outline-color: transparent;
@@ -112,6 +117,9 @@ $true-wallet-tg-bot-theme: mat.define-light-theme((
 
   --mdc-elevated-card-container-shape: 20px;
   --mdc-elevated-card-container-color: transparent;
+  --mdc-dialog-container-shape: 0px;
+
+  --mdc-snackbar-container-color: transparent;
 
   .app {
 
@@ -121,6 +129,10 @@ $true-wallet-tg-bot-theme: mat.define-light-theme((
 
     .mat-mdc-button {
       --mdc-text-button-label-text-color: var(--text-color-primary);
+    }
+
+    .mat-mdc-select-panel {
+      border-radius: 0 0 16px 16px;
     }
   }
 }
@@ -148,7 +160,7 @@ a {
 .app {
   .mat-mdc {
     &-tab-body-content {
-      padding-top: 24px;
+      padding-top: 16px;
     }
 
     &-form-field {
@@ -196,6 +208,12 @@ a {
         color: var(--text-color-secondary);
       }
     }
+
+    &-snack-bar-container {
+      .mdc-snackbar__surface {
+        box-shadow: none;
+      }
+    }
   }
 
   .mdc-text-field {
@@ -211,7 +229,8 @@ a {
   .erc20-operation {
     .mat-bottom-sheet-container {
       border-radius: 16px 16px 0 0;
-      min-height: 80vh;
+      min-height: 90vh;
+      max-height: 95vh;
     }
   }
 }

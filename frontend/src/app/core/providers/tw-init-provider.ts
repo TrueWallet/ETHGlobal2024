@@ -8,10 +8,7 @@ export const twInitProvider = {
   useFactory: (userId: string, appService: WalletService) => async () => {
     console.log('twInitProvider', userId);
     // TODO: throw error if userId is null
-    const sdk: TrueWalletSDK = await init({
-      salt: `wallet-${userId}`,
-      // paymaster: '0x6EDB39854ed6BF00b6E0fe69B2a8F3879C594561',
-    });
+    const sdk: TrueWalletSDK = await init({salt: `wallet-${userId}`});
     appService.initialize(sdk);
     return sdk;
   },

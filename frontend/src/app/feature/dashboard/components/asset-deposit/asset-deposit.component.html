@@ -1,0 +1,27 @@
+<app-operation-header (onClose)="close()">Deposit</app-operation-header>
+
+<div class="deposits">
+  <span class="label">My deposit:</span>
+
+  <div class="value">
+    {{depositBalance$ | async | number: '.0-4'}} ETH
+
+    <button mat-flat-button color="primary">Withdraw</button>
+  </div>
+</div>
+
+<form>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>Amount</mat-label>
+    <input matInput type="text" name="amount" [(ngModel)]="depositAmount">
+    <div matTextSuffix>ETH</div>
+    <mat-hint>Balance: {{nativeBalance$ | async}} ETH</mat-hint>
+  </mat-form-field>
+  <br>
+
+  <div class="actions">
+    <app-loading-button [loading]="loading$ | async" (onClick)="deposit()">
+      Deposit
+    </app-loading-button>
+  </div>
+</form>

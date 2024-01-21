@@ -3,13 +3,6 @@ import { Addresses } from "./addresses";
 
 export const ERC20TokensList: ERC20Token[] = [
   {
-    address: Addresses.AAVE,
-    title: 'AAVE PROTOCOL',
-    symbol: 'AAVE',
-    icon: 'assets/icons/aave.svg',
-    operations: [AssetOperation.send, AssetOperation.receive],
-  },
-  {
     address: Addresses.GHO,
     title: 'GHO Token',
     symbol: 'GHO',
@@ -22,5 +15,12 @@ export const ERC20TokensList: ERC20Token[] = [
     symbol: 'USDT',
     icon: 'assets/icons/usdt.svg',
     operations: [AssetOperation.send, AssetOperation.receive],
-  }
+  },
+  {
+    address: Addresses.AAVE,
+    title: 'AAVE PROTOCOL',
+    symbol: 'AAVE',
+    icon: 'assets/icons/aave.svg',
+    operations: [AssetOperation.send, AssetOperation.receive],
+  },
 ];

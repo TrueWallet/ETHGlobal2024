@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 import { ERC20Token } from "../../interfaces";
 import { encodeFunctionData } from "true-wallet-sdk";
 import { AaveV3Sepolia } from "@bgd-labs/aave-address-book";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { WalletService } from "../../../../core/services/wallet/wallet.service";
-import { filter, from, Observable, of, repeat, switchMap, takeWhile, tap } from "rxjs";
+import { from, map, Observable, switchMap, tap } from "rxjs";
+import { NotificationsService } from "../notifications/notifications.service";
+import { waitForUserOperation } from "../../../../core/helpers/wait-for-user-operation";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepositService {
 
-  constructor(private wallet: WalletService) { }
+  constructor(
+    private wallet: WalletService,
+    private notifications: NotificationsService,
+  ) { }
 
   deposit(token: ERC20Token, depositAmount: string): Observable<any> {
     const abi = ['function depositETH(address, address onBehalfOf, uint16 referralCode) external payable'];
@@ -22,19 +27,25 @@ export class DepositService {
     );
 
     return from(this.wallet.sdk.execute(txData, AaveV3Sepolia.WETH_GATEWAY, ethers.utils.parseEther(depositAmount.toString()).toString())).pipe(
-      switchMap((opHash) => this.waitForReceipt(opHash)),
+      switchMap((opHash) => waitForUserOperation(opHash, this.wallet.sdk)),
+      tap((receipt) => this.notifications.success({
+        title: 'Operation successful.',
+        message: `You have successfully deposited ${depositAmount} ETH.`,
+      })),
     );
   }
 
-  // fixme: duplicated code
-  private waitForReceipt(opHash: string): Observable<any> {
-    return of(opHash).pipe(
-      tap((opHash) => {console.log('here opHash', opHash)}),
-      switchMap((opHash: string) => from(this.wallet.sdk.bundlerClient.getUserOperationReceipt(opHash))),
-      tap((receipt) => {console.log('receipt', receipt)}),
-      repeat({delay: 10_000}),
-      filter((receipt) => receipt !== null),
-      takeWhile((receipt) => receipt === null, true),
+  getDepositedAmount(): Observable<string> {
+    // fixme: refactor
+    const contract = new ethers.Contract(
+      '0x5b071b590a59395fE4025A0Ccc1FcC931AAc1830',
+      ['function balanceOf(address user) public view returns (uint256)'],
+      // @ts-ignore
+      new ethers.providers.JsonRpcProvider(this.wallet.sdk.config.rpcProviderUrl),
+    );
+
+    return from(contract['balanceOf'](this.wallet.sdk.walletAddress)).pipe(
+      map((balance) => ethers.utils.formatEther(balance as BigNumber)),
     );
   }
 }
